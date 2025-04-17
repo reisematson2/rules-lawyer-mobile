@@ -1,4 +1,4 @@
-// Cleaned App.js (updated to remove Camera.Type dependency)
+// Cleaned App.js (final fix: using correct Camera component check)
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
@@ -90,12 +90,16 @@ export default function App() {
   if (hasPermission === null) return <View><Text>Requesting camera permission...</Text></View>;
   if (hasPermission === false) return <View><Text>No access to camera.</Text></View>;
 
-  console.log("Camera component:", Camera);
-  console.log("Camera ref:", cameraRef);
+  const CameraComponent = Camera?.prototype?.render ? Camera : View;
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} ref={ref => setCameraRef(ref)} ratio="16:9" type="back" />
+      <CameraComponent
+        style={styles.camera}
+        ref={ref => setCameraRef(ref)}
+        ratio="16:9"
+        type="back"
+      />
       <TouchableOpacity onPress={handleScan} style={styles.button}>
         <Text style={styles.buttonText}>Scan Card</Text>
       </TouchableOpacity>
