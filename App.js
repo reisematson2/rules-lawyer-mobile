@@ -90,6 +90,9 @@ export default function App() {
   if (hasPermission === null) return <View><Text>Requesting camera permission...</Text></View>;
   if (hasPermission === false) return <View><Text>No access to camera.</Text></View>;
 
+  console.log("Camera component:", Camera);
+  console.log("Camera ref:", cameraRef);
+
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} ref={ref => setCameraRef(ref)} ratio="16:9" type="back" />
