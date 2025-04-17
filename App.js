@@ -19,9 +19,11 @@ export default function App() {
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
+      console.log("Camera permission status:", status);
       setHasPermission(status === 'granted');
     })();
   }, []);
+  
 
   const runOCR = async (imageUri) => {
     const base64 = await FileSystem.readAsStringAsync(imageUri, { encoding: 'base64' });
