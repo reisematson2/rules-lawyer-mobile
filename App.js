@@ -1,4 +1,4 @@
-// Cleaned App.js (JavaScript version) for Expo - No TypeScript
+// Cleaned App.js (updated to remove Camera.Type dependency)
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
@@ -23,7 +23,6 @@ export default function App() {
       setHasPermission(status === 'granted');
     })();
   }, []);
-  
 
   const runOCR = async (imageUri) => {
     const base64 = await FileSystem.readAsStringAsync(imageUri, { encoding: 'base64' });
@@ -87,10 +86,6 @@ export default function App() {
       setLoading(false);
     }
   };
-
-  if (!Camera || !Camera.Type) {
-    return <View><Text>Loading camera module...</Text></View>;
-  }
 
   if (hasPermission === null) return <View><Text>Requesting camera permission...</Text></View>;
   if (hasPermission === false) return <View><Text>No access to camera.</Text></View>;
