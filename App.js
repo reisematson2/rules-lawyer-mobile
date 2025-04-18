@@ -1,14 +1,18 @@
-// Cleaned App.js (final fix: using correct Camera component check)
+// Cleaned App.js (lazy Camera rendering fix)
 
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { Camera } from 'expo-camera';
+
+console.log("Camera imported:", Camera);
+
 import * as ImageManipulator from 'expo-image-manipulator';
 import * as FileSystem from 'expo-file-system';
 import Tesseract from 'tesseract.js';
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState(null);
+  const [cameraLoaded, setCameraLoaded] = useState(false);
   const [cameraRef, setCameraRef] = useState(null);
   const [loading, setLoading] = useState(false);
   const [imageUri, setImageUri] = useState(null);
@@ -90,16 +94,26 @@ export default function App() {
   if (hasPermission === null) return <View><Text>Requesting camera permission...</Text></View>;
   if (hasPermission === false) return <View><Text>No access to camera.</Text></View>;
 
-  const CameraComponent = Camera?.prototype?.render ? Camera : View;
+  console.log("Camera type check:", typeof Camera);
+  console.log("Camera object:", Camera);
+
 
   return (
     <View style={styles.container}>
-      <CameraComponent
-        style={styles.camera}
-        ref={ref => setCameraRef(ref)}
-        ratio="16:9"
-        type="back"
-      />
+      {hasPermission && !cameraLoaded && <Text style={{ color: 'white', padding: 20 }}>Loading camera...</Text>}
+      {hasPermission && Camera && (
+        <Camera
+          style={styles.camera}
+          ref={ref => setCameraRef(ref)}
+          ratio="16:9"
+          type="back"
+          onCameraReady={() => {
+            console.log("Camera is ready ✅");
+            setCameraLoaded(true);
+          }}
+        />
+      )}
+
       <TouchableOpacity onPress={handleScan} style={styles.button}>
         <Text style={styles.buttonText}>Scan Card</Text>
       </TouchableOpacity>
